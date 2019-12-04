@@ -1,0 +1,5 @@
+build/
+assets/
+
+.gradle/
+node_modules/

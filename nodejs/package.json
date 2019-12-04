@@ -1,0 +1,15 @@
+{
+  "name": "test-on-saucelabs",
+  "version": "0.0.1",
+  "description": "Collection of scripts for running tests on saucelabs",
+  "main": "",
+  "scripts": {
+    "start": "node example.js"
+  },
+  "private": true,
+  "dependencies": {
+    "debug": "^4.1.1",
+    "http-errors": "^1.7.2",
+    "selenium-webdriver": "4.0.0-alpha.1"
+  }
+}
