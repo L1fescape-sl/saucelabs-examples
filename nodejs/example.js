@@ -9,33 +9,38 @@ const {
 let driver;
 
 async function run() {
-  let remoteAddress = REMOTE_ADDRESS || 'https://@ondemand.saucelabs.com:443/wd/hub'
+  let remoteAddress = 'https://ondemand.saucelabs.com:443/wd/hub'
+  if (REMOTE_ADDRESS) {
+    console.log(`Using remote address: ${REMOTE_ADDRESS}`);
+    remoteAddress = REMOTE_ADDRESS;
+  }
 
-  driver = await new webdriver.Builder().withCapabilities({
+  const sauceOptions = {
+    username: SAUCE_USERNAME,
+    accessKey: SAUCE_ACCESS_KEY,
+  }
+
+  const capabilities = {
     browserName: 'microsoftedge',
     platformName: 'Windows 10',
     versionName: '78',
-    'sauce:options': {
-      username: SAUCE_USERNAME,
-      accessKey: SAUCE_ACCESS_KEY,
-      build: 'nodejs edge test',
-      name: 'nodejs-edge-test'
-    },
-    acceptSslCerts: true,
-  }).usingServer(remoteAddress).build();
+    'sauce:options': sauceOptions,
+  }
 
-  await driver.get('https://www.saucedemo.com');
+  driver = await new webdriver.Builder().withCapabilities(capabilities).usingServer(remoteAddress).build()
 
-  const title = await driver.getTitle();
+  await driver.get('https://www.saucedemo.com')
+
+  const title = await driver.getTitle()
   if (title === 'Swag Labs'){
-      driver.executeScript('sauce:job-result=passed');
+      driver.executeScript('sauce:job-result=passed')
       console.log('Test Passed!')
   } else {
-      driver.executeScript('sauce:job-result=failed');
+      driver.executeScript('sauce:job-result=failed')
       console.log('Test Failed!', 'Title did not match')
   }
 
-  await driver.quit();
+  await driver.quit()
 }
 
 run().catch(function (error) {

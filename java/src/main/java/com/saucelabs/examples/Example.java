@@ -31,7 +31,7 @@ class Example {
 		browserOptions.setCapability("buildNumber", "3.0");
 
 		String remoteAddress = "https://ondemand.saucelabs.com/wd/hub";
-		if (REMOTE_ADDRESS != "") {
+		if (REMOTE_ADDRESS != null && !REMOTE_ADDRESS.isEmpty()) {
 			System.out.println(String.format("Using remote address: %s", REMOTE_ADDRESS));
 			remoteAddress = REMOTE_ADDRESS;
 		}

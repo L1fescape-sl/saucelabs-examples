@@ -8,8 +8,6 @@
   },
   "private": true,
   "dependencies": {
-    "debug": "^4.1.1",
-    "http-errors": "^1.7.2",
     "selenium-webdriver": "4.0.0-alpha.1"
   }
 }
