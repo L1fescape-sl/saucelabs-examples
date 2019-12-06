@@ -3,7 +3,6 @@ package com.saucelabs.examples;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.MutableCapabilities;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import java.net.URL;
 
@@ -13,9 +12,15 @@ class Example {
 		String SAUCE_ACCESS_KEY = System.getenv("SAUCE_ACCESS_KEY");
 		String REMOTE_ADDRESS = System.getenv("REMOTE_ADDRESS");
 
+		String remoteAddress = "https://ondemand.saucelabs.com/wd/hub";
+		if (REMOTE_ADDRESS != null && !REMOTE_ADDRESS.isEmpty()) {
+			System.out.println(String.format("Using remote address: %s", REMOTE_ADDRESS));
+			remoteAddress = REMOTE_ADDRESS;
+		}
+
 		EdgeOptions browserOptions = new EdgeOptions();
 		browserOptions.setCapability("platformName", "Windows 10");
-		browserOptions.setCapability("browserVersion", "78");
+		browserOptions.setCapability("browserVersion", "latest");
 		MutableCapabilities sauceOptions = new MutableCapabilities();
 
 		sauceOptions.setCapability("username", SAUCE_USERNAME);
@@ -26,18 +31,13 @@ class Example {
 		chromeOpts.setExperimentalOption("w3c", true);
 		browserOptions.setCapability("goog:chromeOptions", chromeOpts);
 
-		browserOptions.setCapability("name", "Test1");
-		browserOptions.setCapability("extendedDebugging", "true");
-		browserOptions.setCapability("buildNumber", "3.0");
+		RemoteWebDriver driver = new RemoteWebDriver(new URL(remoteAddress), browserOptions);
+		System.out.println(String.format("Session id: %s", driver.getSessionId()));
 
-		String remoteAddress = "https://ondemand.saucelabs.com/wd/hub";
-		if (REMOTE_ADDRESS != null && !REMOTE_ADDRESS.isEmpty()) {
-			System.out.println(String.format("Using remote address: %s", REMOTE_ADDRESS));
-			remoteAddress = REMOTE_ADDRESS;
-		}
-
-		WebDriver driver = new RemoteWebDriver(new URL(remoteAddress), browserOptions);
 		driver.navigate().to("https://www.saucedemo.com");
+		String title = driver.getTitle();
+		System.out.println(String.format("Page title: %s", title));
+
 		driver.quit();
   }
 }

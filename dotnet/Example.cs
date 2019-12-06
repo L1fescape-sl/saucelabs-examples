@@ -14,26 +14,28 @@ namespace SauceLabsExamples
       var SAUCE_ACCESS_KEY = Environment.GetEnvironmentVariable("SAUCE_ACCESS_KEY");
       var REMOTE_ADDRESS = Environment.GetEnvironmentVariable("REMOTE_ADDRESS");
 
+      var sauceURL = new Uri("https://ondemand.saucelabs.com/wd/hub");
+      if (!String.IsNullOrEmpty(REMOTE_ADDRESS)) {
+        sauceURL = new Uri(REMOTE_ADDRESS);
+        Console.WriteLine($"Using remote address: {sauceURL}");
+      }
+
       var sauceOptions = new Dictionary<string, object>{
         ["username"] = SAUCE_USERNAME,
         ["accessKey"] = SAUCE_ACCESS_KEY,
       };
       var options = new EdgeOptions{
-        BrowserVersion = "78",
+        BrowserVersion = "latest",
         PlatformName = "Windows 10",
       };
       options.AddAdditionalCapability("sauce:options", sauceOptions);
-      options.AddAdditionalCapability("w3c", true);
-
-      var sauceURL = new Uri("https://ondemand.saucelabs.com/wd/hub");
-      if (REMOTE_ADDRESS != "") {
-        Console.WriteLine($"Using remote address: {REMOTE_ADDRESS}");
-        sauceURL = new Uri(REMOTE_ADDRESS);
-      }
 
       var driver = new RemoteWebDriver(sauceURL, options.ToCapabilities(), TimeSpan.FromSeconds(600));
-      driver.Navigate().GoToUrl("https://www.saucedemo.com");
       Console.WriteLine($"Session id: {driver.SessionId}");
+
+      driver.Navigate().GoToUrl("https://www.saucedemo.com");
+      var title = driver.Title;
+      Console.WriteLine($"Page title: {title}");
 
       driver.Quit();
     }
